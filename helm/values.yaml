@@ -1,0 +1,40 @@
+image:
+  repository: myjenkinsacr.azurecr.io/node-api-postgres
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 2
+
+config: 
+  environment: prod
+  appPort: "3000"
+  postgresHost: myapp-postgres
+  postgresPort: "5432"
+  postgresDb: myappdb
+  redisHost: myapp-redis
+  redisPort: "6379"
+
+secret:
+  postgresUser: ""
+  postgresPassword: ""
+  redisPassword: ""
+
+postgres:
+  image: postgres:16-alpine
+  storage: 10Gi
+  storageClass: managed-csi-premium
+
+redis:
+  image: redis:7-alpine
+  storage: 2Gi
+  storageClass: managed-csi
+
+service: 
+  type: LoadBalancer
+  port: 80
+  targetPort: 3000
+
+ingress: 
+  enabled: true 
+  host: myapp.example.com
+
