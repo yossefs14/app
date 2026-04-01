@@ -1,0 +1,58 @@
+trigger: none 
+
+variables:
+  - name: imagetag
+    value: $(Build.BuildId)
+  - name: ACR_NAME
+    value: myjenkinsacr
+
+pool:
+  name: Default
+
+stages:
+  - stage: CI
+    displayName: Build and Push to ACR
+    jobs:
+      - job: BuildAndPush
+        steps:
+          - task: Docker@2
+            displayName: Build and push image
+            inputs:
+              command: buildAndPush
+              repository: app
+              Dockerfile: Dockerfile
+              containerRegistry: acr-connection
+              tags: |
+                $(imagetag)
+                latest 
+  - stage: CD
+    displayName: Deploy to AKS
+    dependsOn: CI
+    jobs:
+      - deployment: HelmDeploy
+        environment: prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                
+                - task: HelmDeploy@0
+                  displayName: HelmUpgrade
+                  inputs:
+                    connectionType: Kubernetes Service Connection
+                    kubernetesServiceConnection: aks-connection
+                    namespace: prod
+                    command: upgrade
+                    chartType: FilePath
+                    chartPath: $(System.DefaultWorkingDirectory)/helm
+                    releaseName: myapp
+                    install: true
+                    waitForExecution: true
+                    overrideValues: >
+                      image.tag=$(imagetag),
+                      secret.postgresUser=$(POSTGRES_USER),
+                      secret.postgresPassword=$(POSTGRES_PASSWORD),
+                      secret.redisPassword=$(REDIS_PASSWORD),
+                      config.postgresHost=myapp-postgres,
+                      config.redisHost=myapp-redis
