@@ -42,18 +42,12 @@ stages:
                 - task: HelmDeploy@0
                   displayName: HelmUpgrade
                   inputs:
-                    connectionType: Kubernetes Service Connection
-                    kubernetesServiceConnection: aks-connection
-                    namespace: prod
-                    command: upgrade
-                    chartType: FilePath
-                    chartPath: $(Build.SourcesDirectory)/helm
-                    releaseName: myapp
-                    waitForExecution: true
-                    overrideValues: >
-                      image.tag=$(imagetag),
-                      secret.postgresUser=$(POSTGRES_USER),
-                      secret.postgresPassword=$(POSTGRES_PASSWORD),
-                      secret.redisPassword=$(REDIS_PASSWORD),
-                      config.postgresHost=myapp-postgres,
-                      config.redisHost=myapp-redis
+                    connectionType: 'Kubernetes Service Connection'
+                    kubernetesServiceConnection: 'aks-connection'
+                    namespace: 'prod'
+                    command: 'upgrade'
+                    chartType: 'FilePath'
+                    chartPath: '$(Build.SourcesDirectory)/helm'
+                    releaseName: 'myapp'
+                    overrideValues: 'image.tag=$(imagetag), secret.postgresUser=$(POSTGRES_USER), secret.postgresPassword=$(POSTGRES_PASSWORD), secret.redisPassword=$(REDIS_PASSWORD), config.postgresHost=myapp-postgres, config.redisHost=myapp-redis'
+                    valueFile: '$(Build.SourcesDirectory)/helm/values.yaml'
