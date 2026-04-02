@@ -15,16 +15,7 @@ stages:
     jobs:
       - job: BuildAndPush
         steps:
-          - task: Docker@2
-            displayName: Build and push image
-            inputs:
-              command: buildAndPush
-              repository: app
-              Dockerfile: Dockerfile
-              containerRegistry: acr-connection
-              tags: |
-                $(imagetag)
-                latest 
+
           - script: |
               ls -la helm
   - stage: CD
@@ -38,7 +29,7 @@ stages:
             deploy:
               steps:
                 - checkout: self
-                - script: ls -la
+                - script: ls -la helm
                 - task: HelmDeploy@0
                   displayName: HelmUpgrade
                   inputs:
