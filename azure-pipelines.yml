@@ -15,7 +15,16 @@ stages:
     jobs:
       - job: BuildAndPush
         steps:
-
+          - task: Docker@2
+            displayName: Build and push image
+            inputs:
+              command: buildAndPush
+              repository: app
+              Dockerfile: Dockerfile
+              containerRegistry: acr-connection
+              tags: |
+                $(imagetag)
+                latest 
           - script: |
               ls -la helm
   - stage: CD
@@ -29,7 +38,7 @@ stages:
             deploy:
               steps:
                 - checkout: self
-                - script: ls -la helm
+                - script: ls -la
                 - task: HelmDeploy@0
                   displayName: HelmUpgrade
                   inputs:
@@ -40,5 +49,4 @@ stages:
                     chartType: 'FilePath'
                     chartPath: '$(Build.SourcesDirectory)/helm'
                     releaseName: 'demo'
-                    overrideValues: 'image.tag=$(imagetag), secret.postgresUser=$(POSTGRES_USER), secret.postgresPassword=$(POSTGRES_PASSWORD), secret.redisPassword=$(REDIS_PASSWORD), config.postgresHost=myapp-postgres, config.redisHost=myapp-redis'
                     valueFile: '$(Build.SourcesDirectory)/helm/values.yaml'
