@@ -50,3 +50,4 @@ stages:
                     chartPath: '$(Build.SourcesDirectory)/helm'
                     releaseName: 'demo'
                     valueFile: '$(Build.SourcesDirectory)/helm/values.yaml'
+                    arguments: '--timeout 10m'
