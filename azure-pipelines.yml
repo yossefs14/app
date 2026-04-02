@@ -48,6 +48,6 @@ stages:
                     command: 'upgrade'
                     chartType: 'FilePath'
                     chartPath: '$(Build.SourcesDirectory)/helm'
-                    releaseName: 'myapp'
+                    releaseName: 'demo'
                     overrideValues: 'image.tag=$(imagetag), secret.postgresUser=$(POSTGRES_USER), secret.postgresPassword=$(POSTGRES_PASSWORD), secret.redisPassword=$(REDIS_PASSWORD), config.postgresHost=myapp-postgres, config.redisHost=myapp-redis'
                     valueFile: '$(Build.SourcesDirectory)/helm/values.yaml'
