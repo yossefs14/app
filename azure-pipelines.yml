@@ -38,7 +38,7 @@ stages:
             deploy:
               steps:
                 - checkout: self
-                
+                - script: ls -la
                 - task: HelmDeploy@0
                   displayName: HelmUpgrade
                   inputs:
