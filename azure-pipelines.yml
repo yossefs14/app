@@ -49,7 +49,6 @@ stages:
                     chartType: FilePath
                     chartPath: $(Build.SourcesDirectory)/helm
                     releaseName: myapp
-                    install: true
                     waitForExecution: true
                     overrideValues: >
                       image.tag=$(imagetag),
