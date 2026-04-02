@@ -26,7 +26,7 @@ stages:
                 $(imagetag)
                 latest 
           - script: |
-              ls -la
+              ls -la helm
   - stage: CD
     displayName: Deploy to AKS
     dependsOn: CI
