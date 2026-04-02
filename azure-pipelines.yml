@@ -47,7 +47,7 @@ stages:
                     namespace: prod
                     command: upgrade
                     chartType: FilePath
-                    chartPath: $(System.DefaultWorkingDirectory)/helm
+                    chartPath: $(Build.SourcesDirectory)/helm
                     releaseName: myapp
                     install: true
                     waitForExecution: true
